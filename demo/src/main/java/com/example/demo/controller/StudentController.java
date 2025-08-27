@@ -23,12 +23,14 @@ public class StudentController {
         return genericResponseDto;
     }
 
-   /* @PutMapping("/{id}")
+    @PutMapping("/{id}")
     public GenericResponseDto<StudentDto> updateStudent(@RequestBody StudentDto studentDto) {
         GenericResponseDto<StudentDto> genericResponseDto = new GenericResponseDto<>();
-
-        return studentService.updateStudent(studentDto);
-    }*/
+        genericResponseDto.setError(false);
+        genericResponseDto.setMessage("feched student successfully");
+        genericResponseDto.setMeta(studentService.updateStudent(studentDto));
+        return genericResponseDto;
+    }
 
     @GetMapping("/getStudentById/{id}")
     public GenericResponseDto<StudentDto> getStudentById(@PathVariable Long id) throws GenericException {
