@@ -20,7 +20,7 @@ public class StudentService {
         return studentResponseDto;
     }
 
-    public StudentDto updateStudent(StudentDto studentRequestDto) {
+    public StudentDto updateStudent(Long id, StudentDto studentRequestDto) {
         Student existingStudentEntity = studentRepository.findById(studentRequestDto.getId())
                 .orElseThrow(() -> new GenericException("Student not found with id: " + studentRequestDto.getId()));
         Student studentEntity = StudentDtoFormatter.toStudentEntity(studentRequestDto);
