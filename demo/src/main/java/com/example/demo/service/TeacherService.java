@@ -1,7 +1,14 @@
 package com.example.demo.service;
 
+import com.example.demo.dto.CourseDto;
+import com.example.demo.dto.StudentDto;
 import com.example.demo.dto.TeacherDto;
+import com.example.demo.dtoFormatter.CourseDtoFormatter;
+import com.example.demo.dtoFormatter.StudentDtoFormatter;
+import com.example.demo.dtoFormatter.TeacherDtoFormatter;
 import com.example.demo.exceptions.GenericException;
+import com.example.demo.model.Course;
+import com.example.demo.model.Student;
 import com.example.demo.model.Teacher;
 import com.example.demo.repository.CourseRepository;
 import com.example.demo.repository.TeacherRepository;
@@ -19,38 +26,35 @@ public class TeacherService {
     private CourseRepository courseRepository;
 
 
-    public TeacherDto createTeacher(TeacherDto teacherDto) {
-        Teacher teacher = new Teacher();
-        teacher.setName(teacherDto.getName());
-        teacher.setEmail(teacherDto.getEmail());
-        Teacher savedTeacher = teacherRepository.save(teacher);
-        return mapToDto(savedTeacher);
+    public TeacherDto createTeacher(TeacherDto teacherRequestDto) {
+        Teacher teacherEntity = TeacherDtoFormatter.toTeacherEntity(teacherRequestDto);
+        Teacher savedTeacher = teacherRepository.save(teacherEntity);
+        TeacherDto teacherResponseDto = TeacherDtoFormatter.toTeacherDto(savedTeacher);
+        return teacherResponseDto;
     }
 
+    public TeacherDto updateTeacher(Long id, TeacherDto teacherRequestDto) {
+        Teacher existingTeacherEntity = teacherRepository.findById(teacherRequestDto.getId())
+                .orElseThrow(() -> new GenericException("Student not found with id: " + teacherRequestDto.getId()));
+        Teacher teacherEntity = TeacherDtoFormatter.toTeacherEntity(teacherRequestDto);
+        teacherEntity.setCourses(existingTeacherEntity.getCourses());
+        Teacher updatedTeacher = teacherRepository.save(teacherEntity);
+        TeacherDto teacherResponseDto = TeacherDtoFormatter.toTeacherDto(updatedTeacher);
+        return teacherResponseDto;
+    }
 
-    public TeacherDto updateTeacher(Long id, TeacherDto teacherDto) throws GenericException {
+    public TeacherDto getTeacherById(Long id) {
         Teacher teacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new GenericException("Teacher not found with id: " + id));
-        teacher.setName(teacherDto.getName());
-        teacher.setEmail(teacherDto.getEmail());
-        Teacher updatedTeacher = teacherRepository.save(teacher);
-        return mapToDto(updatedTeacher);
+
+        TeacherDto teacherResponseDto = TeacherDtoFormatter.toTeacherDto(teacher);
+        return teacherResponseDto;
     }
 
-
-    public TeacherDto getTeacherById(Long id) throws GenericException {
+    public void deleteTeacher(Long id) {
         Teacher teacher = teacherRepository.findById(id)
                 .orElseThrow(() -> new GenericException("Teacher not found with id: " + id));
-        return mapToDto(teacher);
-    }
-
-
-    private TeacherDto mapToDto(Teacher teacher) {
-        TeacherDto dto = new TeacherDto();
-        dto.setId(teacher.getId());
-        dto.setName(teacher.getName());
-        dto.setEmail(teacher.getEmail());
-        return dto;
+        teacherRepository.delete(teacher);
     }
 
 }

@@ -9,7 +9,7 @@ public class StudentDtoFormatter {
         studentDto.setId(studentEntity.getId());
         studentDto.setName(studentEntity.getName());
         studentDto.setEmail(studentEntity.getEmail());
-      //  studentDto.setCourses(student.getCourses());
+        //studentDto.setCourses(studentEntity.getCourses());
         return studentDto;
     }
 

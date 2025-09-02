@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(GenericException.class)
-    public GenericResponseDto<Object> handleProductNotFoundException(GenericException ex) {
+    public GenericResponseDto<Object> handleGenericException(GenericException ex) {
         GenericResponseDto<Object> exceptionDto = new GenericResponseDto<>();
         exceptionDto.setError(true);
         exceptionDto.setMessage(ex.getLocalizedMessage());

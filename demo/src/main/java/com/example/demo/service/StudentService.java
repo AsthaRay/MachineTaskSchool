@@ -14,18 +14,28 @@ public class StudentService {
     private StudentRepository studentRepository;
 
     public StudentDto createStudent(StudentDto studentRequestDto) {
-        Student studentEntity = StudentDtoFormatter.toStudentEntity(studentRequestDto);
-        Student savedStudent = studentRepository.save(studentEntity);
-        StudentDto studentResponseDto = StudentDtoFormatter.toStudentDto(savedStudent);
-        return studentResponseDto;
+        try {
+            Student studentEntity = StudentDtoFormatter.toStudentEntity(studentRequestDto);
+            Student savedStudent = studentRepository.save(studentEntity);
+            StudentDto studentResponseDto = StudentDtoFormatter.toStudentDto(savedStudent);
+            return studentResponseDto;
+
+        } catch (Exception e) {
+            throw new GenericException("Unable to save student");
+        }
     }
 
-    public StudentDto updateStudent(Long id, StudentDto studentRequestDto) {
+    public StudentDto updateStudent(StudentDto studentRequestDto) {
         Student existingStudentEntity = studentRepository.findById(studentRequestDto.getId())
                 .orElseThrow(() -> new GenericException("Student not found with id: " + studentRequestDto.getId()));
-        Student studentEntity = StudentDtoFormatter.toStudentEntity(studentRequestDto);
-        studentEntity.setCourses(existingStudentEntity.getCourses());
-        Student updatedStudent = studentRepository.save(studentEntity);
+        existingStudentEntity.setCourses(existingStudentEntity.getCourses());
+        existingStudentEntity.setId(existingStudentEntity.getId());
+       if(!studentRequestDto.getName().isEmpty()){
+           existingStudentEntity.setName(existingStudentEntity.getName());
+       } else if (!studentRequestDto.getEmail().isEmpty()) {
+           existingStudentEntity.setEmail(existingStudentEntity.getEmail());
+       }
+        Student updatedStudent = studentRepository.save(existingStudentEntity);
         StudentDto studentResponseDto = StudentDtoFormatter.toStudentDto(updatedStudent);
         return studentResponseDto;
     }
@@ -38,7 +48,7 @@ public class StudentService {
         return studentResponseDto;
     }
 
-     public void deleteStudent(Long id) {
+    public void deleteStudent(Long id) {
         Student student = studentRepository.findById(id)
                 .orElseThrow(() -> new GenericException("Student not found with id: " + id));
         studentRepository.delete(student);

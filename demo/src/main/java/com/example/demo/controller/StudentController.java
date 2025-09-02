@@ -5,12 +5,14 @@ import com.example.demo.dto.StudentDto;
 import com.example.demo.exceptions.GenericException;
 import com.example.demo.service.StudentService;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 
 @RestController
 @RequestMapping("/students")
+
 
 public class StudentController {
 
@@ -26,13 +28,12 @@ public class StudentController {
         return response;
     }
 
-    @PutMapping("/{id}")
-    public GenericResponseDto<StudentDto> updateStudent(@PathVariable Long id,
-                                                        @RequestBody StudentDto studentDto) {
+    @PutMapping("/updateStudent")
+    public GenericResponseDto<StudentDto> updateStudent(@RequestBody StudentDto studentDto) {
         GenericResponseDto<StudentDto> response = new GenericResponseDto<>();
         response.setError(false);
         response.setMessage("Student updated successfully");
-        response.setMeta(studentService.updateStudent(id, studentDto));
+        response.setMeta(studentService.updateStudent(studentDto));
         return response;
     }
 
@@ -42,6 +43,16 @@ public class StudentController {
         response.setError(false);
         response.setMessage("Fetched student successfully");
         response.setMeta(studentService.getStudentById(id));
+        return response;
+    }
+
+    @DeleteMapping("/deleteStudent/{id}")
+    public GenericResponseDto<String> deleteStudent(@PathVariable Long id) {
+        studentService.deleteStudent(id);
+        GenericResponseDto<String> response = new GenericResponseDto<>();
+        response.setError(false);
+        response.setMessage("Student deleted successfully");
+        response.setMeta("Deleted student ID: " + id);
         return response;
     }
 

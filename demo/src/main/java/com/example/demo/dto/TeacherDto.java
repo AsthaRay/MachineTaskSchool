@@ -14,7 +14,6 @@ public class TeacherDto {
     private Long id;
     private String name;
     private String email;
-    @JsonIgnoreProperties("teacher")
     private List<CourseDto> courses = new ArrayList<>();
 
 }
