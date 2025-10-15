@@ -12,6 +12,7 @@ public class StudentDto {
     private Long id;
     private String name;
     private String email;
+    private Integer marks;
   //  @JsonIgnore
     private List<CourseDto> courses = new ArrayList<>();
 }

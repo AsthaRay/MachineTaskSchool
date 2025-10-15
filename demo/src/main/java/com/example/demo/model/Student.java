@@ -16,6 +16,7 @@ public class Student {
 
     private String name;
     private String email;
+    private Integer marks;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(

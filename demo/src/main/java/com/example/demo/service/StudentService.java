@@ -55,3 +55,10 @@ public class StudentService {
     }
 
 }
+
+/*
+* studentRepository.save(studentEntity); - INSERT, UPDATE
+* studentRepository.findById(id); - SELECT ALL FIELDS BUT RETURN ONLY ONE RECORD WITH ID
+* studentRepository.findAll(); - SELECT ALL FIELDS AND RETURN ALL RECORD
+* studentRepository.existsById(id); - CHECK AND RETURN IF RECORD PRESENT WITH ID
+* */
